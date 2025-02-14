@@ -34,9 +34,6 @@ app.use('/auth', authRouter);
 const productRouter = require('./routes/product');
 app.use('/product', productRouter);
 
-// Rota de carrinhos
-const cartRouter = require('./routes/cart');
-app.use('/cart', cartRouter);
 
 
 app.listen(port, () => {

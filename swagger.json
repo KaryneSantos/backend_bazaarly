@@ -169,7 +169,128 @@
               }
        }  
         }
+      },
+
+      "/products": {
+        "get": {
+          "summary": "Lista todos os produtos",
+          "description": "Retorna uma lista de todos os produtos cadastrados.",
+          "responses": {
+            "200": {
+              "description": "Lista de produtos",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID do produto"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do produto"
+                    },
+                    "descricao": {
+                      "type": "string",
+                      "description": "Descrição do produto"
+                    },
+                    "preco": {
+                      "type": "number",
+                      "description": "Preço do produto"
+                    },
+                    "estoque": {
+                      "type": "integer",
+                      "description": "Estoque do produto"
+                    },
+                    "vendedorId": {
+                      "type": "integer",
+                      "description": "ID do vendedor"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro no servidor"
+            }
+          }
+        },
+        "post": {
+          "summary": "Cria um novo produto",
+          "description": "Cria um novo produto no sistema.",
+          "parameters": [
+            {
+              "name": "product",
+              "in": "body",
+              "description": "Objeto contendo os dados do produto.",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "description": "Nome do produto"
+                  },
+                  "descricao": {
+                    "type": "string",
+                    "description": "Descrição do produto"
+                  },
+                  "preco": {
+                    "type": "number",
+                    "description": "Preço do produto"
+                  },
+                  "estoque": {
+                    "type": "integer",
+                    "description": "Estoque do produto"
+                  },
+                  "vendedorId": {
+                    "type": "integer",
+                    "description": "ID do vendedor"
+                  }
+                },
+                "required": ["nome", "descricao", "preco", "estoque", "vendedorId"]
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Produto criado com sucesso"
+            },
+            "400": {
+              "description": "Dados inválidos"
+            },
+            "500": {
+              "description": "Erro no servidor"
+            } 
+          }
+        }
+      },
+      "/products/delete": {
+        "delete": {
+          "summary": "Deleta um produto",
+          "description": "Deleta um produto do sistema com base no ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "integer",
+              "description": "ID do produto"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Produto deletado com sucesso"
+            },
+            "404": {
+              "description": "Produto não encontrado"
+            },
+            "500": {
+              "description": "Erro no servidor"
+            }
+          }   
+        }
       }
     }
   }
-  

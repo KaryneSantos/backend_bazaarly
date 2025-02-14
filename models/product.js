@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./user');
 
-const Produto = sequelize.define('Produto', {
+const Product = sequelize.define('Product', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -25,6 +25,10 @@ const Produto = sequelize.define('Produto', {
         allowNull: false,
         defaultValue: 0,
     },
+    tipo_produtos: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     vendedorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -36,11 +40,11 @@ const Produto = sequelize.define('Produto', {
     },
 }, {
     sequelize,
-    modelName: 'Produto',
+    modelName: 'Product',
     timestamps: true,
 });
 
-User.hasMany(Produto, { foreignKey: 'vendedorId' }); // Associação de um para muitos
-Produto.belongsTo(User, { foreignKey: 'vendedorId' }); // Associação de muitos para um
+User.hasMany(Product, { foreignKey: 'vendedorId' });
+Product.belongsTo(User, { foreignKey: 'vendedorId' });
 
-module.exports = Produto;
+module.exports = Product;

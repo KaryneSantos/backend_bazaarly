@@ -9,9 +9,9 @@ const authenticateToken = require('../middleware/auth');
 
 router.post('/', authenticateToken, async(req, res) => {
     try {
-        const {nome, descricao, preco, estoque} = req.body;
+        const {nome, descricao, preco, estoque, tipo_produtos} = req.body;
 
-        if (!nome || !descricao || !preco || !estoque) {
+        if (!nome || !descricao || !preco || !estoque || !tipo_produtos) {
             return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
         }
 
@@ -34,6 +34,7 @@ router.post('/', authenticateToken, async(req, res) => {
                 descricao: descricao || '',
                 preco: preco,
                 estoque: estoque || 0,
+                tipo_produtos: tipo_produtos,
                 vendedorId: userId // ID do usuário autenticado
             }
         });
@@ -94,9 +95,9 @@ router.get('/', async (req, res) => {
 
 router.put('/update', authenticateToken, async (req, res) => {
     try {
-        const { id, nome, descricao, preco, estoque } = req.body;
+        const { id, nome, descricao, preco, estoque, tipo_produtos } = req.body;
 
-        if (!id || (!nome && !descricao && !preco && !estoque)) {
+        if (!id || (!nome && !descricao && !preco && !estoque && !tipo_produtos)) {
             return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
         }
 
@@ -116,6 +117,7 @@ router.put('/update', authenticateToken, async (req, res) => {
             descricao: descricao || product.descricao,
             preco: preco || product.preco,
             estoque: estoque || product.estoque,
+            tipo_produtos: tipo_produtos || product.tipo_produtos
         });
 
         res.status(200).json({ message: 'Produto atualizado com sucesso.' });
