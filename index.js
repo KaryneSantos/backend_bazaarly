@@ -2,15 +2,22 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const sequelize = require('./config/database');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger.json');
 
 const app = express();
-const port = 3000;
+const port = 3002;
 
 app.use(bodyParser.json());
+
+app.use(cors({
+    origin: 'http://localhost:3001',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  }));
 
 sequelize.sync({ force: false}).then(() => {
     console.log('Banco de dados sincronizado.');
