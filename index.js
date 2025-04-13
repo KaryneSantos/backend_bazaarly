@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sequelize = require('./config/database');
+const session = require("express-session");
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger.json');
@@ -24,6 +25,17 @@ sequelize.sync({ force: false}).then(() => {
 }).catch(error => {
     console.error('Erro ao sincronizar o banco de dados:', error);
 });
+
+app.use(session({
+    secret: 'secreto',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24, 
+    }
+}));
 
 // Configuração da documentação Swagger
 
