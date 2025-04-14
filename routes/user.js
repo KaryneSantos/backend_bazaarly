@@ -5,6 +5,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authenticateToken = require('../middleware/auth');
+const buscarCep = require('../routes/helper');
 
 // Cadastrar um novo usuário
 
@@ -61,9 +62,23 @@ router.get('/', async (req, res) => {
 router.put('/update', authenticateToken, async (req, res) => {
     try {
         const userId = req.userId; // ID de usuário autenticado
-        const {nome, email} = req.body 
+        const {nome, email, cep} = req.body;
+        let logradouro, bairro, localidade, uf;
 
-        if(!nome && !email) {
+        if(cep && cep.trim() !== "") {
+            try {
+                const endereco = await buscarCep(cep);
+                logradouro = endereco.logradouro;
+                bairro = endereco.bairro;
+                localidade = endereco.localidade;
+                uf = endereco.uf;
+            } catch (error) {
+                console.error('Erro ao buscar o CEP:', error);
+                return res.status(500).json({ message: 'Erro ao buscar o CEP.' });
+            }
+        }
+
+        if(!nome && !email && !cep && !logradouro && !bairro && !localidade && !uf) {
             return res.status(400).json({ message: 'Preencha pelo menos um campo.' });
         }
 
@@ -74,8 +89,13 @@ router.put('/update', authenticateToken, async (req, res) => {
         }
 
         await user.update({
-            nome:  nome && nome.trim() !== "" ? nome : user.nome,
+            nome: nome && nome.trim() !== "" ? nome : user.nome,
             email: email && email.trim() !== "" ? email : user.email,
+            cep: cep && cep.trim() !== "" ? cep : user.cep,
+            logradouro: logradouro || user.logradouro,
+            bairro: bairro || user.bairro,
+            localidade: localidade || user.localidade,
+            uf: uf || user.uf
         });
 
         res.status(200).json({
@@ -84,7 +104,11 @@ router.put('/update', authenticateToken, async (req, res) => {
                 id: user.id,
                 nome: user.nome,
                 email: user.email,
-                telefone: user.telefone
+                cep: user.cep,
+                logradouro: user.logradouro,
+                bairro: user.bairro,
+                localidade: user.localidade,
+                uf: user.uf
             }
         });
     } catch(error) {
