@@ -62,7 +62,7 @@ router.get('/', async (req, res) => {
 router.put('/update', authenticateToken, async (req, res) => {
     try {
         const userId = req.userId; // ID de usuário autenticado
-        const {nome, email, cep} = req.body;
+        const {nome, email, cep, complemento} = req.body;
         let logradouro, bairro, localidade, uf;
 
         if(cep && cep.trim() !== "") {
@@ -78,7 +78,7 @@ router.put('/update', authenticateToken, async (req, res) => {
             }
         }
 
-        if(!nome && !email && !cep && !logradouro && !bairro && !localidade && !uf) {
+        if(!nome && !email && !cep && !logradouro && !bairro && !localidade && !uf && !complemento) {
             return res.status(400).json({ message: 'Preencha pelo menos um campo.' });
         }
 
@@ -95,7 +95,8 @@ router.put('/update', authenticateToken, async (req, res) => {
             logradouro: logradouro || user.logradouro,
             bairro: bairro || user.bairro,
             localidade: localidade || user.localidade,
-            uf: uf || user.uf
+            uf: uf || user.uf,
+            complemento: complemento || user.complemento
         });
 
         res.status(200).json({
@@ -108,7 +109,8 @@ router.put('/update', authenticateToken, async (req, res) => {
                 logradouro: user.logradouro,
                 bairro: user.bairro,
                 localidade: user.localidade,
-                uf: user.uf
+                uf: user.uf,
+                complemento: user.complemento
             }
         });
     } catch(error) {
