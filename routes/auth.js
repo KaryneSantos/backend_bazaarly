@@ -5,12 +5,33 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get('/me', (req, res) => {
-    if(req.session.user && req.session.token) {
-        res.json({
-            user: req.session.user,
-            token: req.session.token
-        });
+router.get('/me', async (req, res) => {
+    if (req.session.user && req.session.token) {
+        try {
+            const user = await User.findByPk(req.session.user.id);
+
+            if (!user) {
+                return res.status(404).json({ error: 'Usuário não encontrado.' });
+            }
+
+            res.json({
+                user: {
+                    id: user.id,
+                    name: user.nome,
+                    email: user.email,
+                    cep: user.cep,
+                    logradouro: user.logradouro,
+                    bairro: user.bairro,
+                    localidade: user.localidade,
+                    uf: user.uf,
+                    complemento: user.complemento,
+                },
+                token: req.session.token
+            });
+        } catch (error) {
+            console.error('Erro ao buscar usuário:', error);
+            res.status(500).json({ error: 'Erro ao buscar dados do usuário.' });
+        }
     } else {
         res.status(401).json({ error: 'Usuário não autenticado.' });
     }
